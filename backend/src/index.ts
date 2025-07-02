@@ -14,8 +14,15 @@ const PORT = process.env.PORT || 3001;
 // Initialize database
 initializeDatabase();
 
-// Security middleware
-app.use(helmet());
+// Security middleware - configure helmet to not force HTTPS upgrades
+const defaultCspOptions = helmet.contentSecurityPolicy.getDefaultDirectives();
+delete defaultCspOptions["upgrade-insecure-requests"]
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: false,
+    directives: { ...defaultCspOptions },
+  }
+}));
 
 // Rate limiting
 const limiter = rateLimit({
