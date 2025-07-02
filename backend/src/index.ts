@@ -27,7 +27,7 @@ app.use(limiter);
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
+    ? true // Allow all origins in production since frontend is served from same origin
     : ['http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true
 }));
@@ -39,8 +39,20 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Serve frontend static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('/app/frontend/dist'));
+}
+
 // API routes
 app.use('/api/items', itemsRouter);
+
+// Serve frontend index.html for root path in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('/', (req, res) => {
+    res.sendFile('/app/frontend/dist/index.html');
+  });
+}
 
 // Serve default sound at /api/default-sound
 app.get('/api/default-sound', (req, res) => {
@@ -88,9 +100,13 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// 404 handler
+// 404 handler - serve frontend for client-side routing in production
 app.use('*', (req, res) => {
-  res.status(404).json({ success: false, error: 'Route not found' });
+  if (process.env.NODE_ENV === 'production') {
+    res.sendFile('/app/frontend/dist/index.html');
+  } else {
+    res.status(404).json({ success: false, error: 'Route not found' });
+  }
 });
 
 // Start server

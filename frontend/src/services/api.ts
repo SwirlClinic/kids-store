@@ -1,4 +1,4 @@
-import { StoreItem, AddItemRequest, UpdateItemRequest, ApiResponse } from '../../../shared/types';
+import { StoreItem, ApiResponse } from '../../../shared/types';
 
 const API_BASE = '/api';
 

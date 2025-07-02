@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Play, ShoppingCart, Trash2, Volume2, Plus, Minus, Settings, X, Eye, EyeOff } from 'lucide-react';
+import { ShoppingCart, Trash2, Volume2, Plus, Minus, Settings, X, Eye, EyeOff } from 'lucide-react';
 import { StoreItem } from '../../../shared/types';
 import { apiService } from '../services/api';
 

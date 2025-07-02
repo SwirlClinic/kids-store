@@ -20,7 +20,7 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
-const db = new Database(dbPath);
+const db: Database.Database = new Database(dbPath);
 
 // Initialize database tables
 export function initializeDatabase() {

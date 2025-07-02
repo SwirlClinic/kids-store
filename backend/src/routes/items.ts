@@ -10,27 +10,27 @@ const router = express.Router();
 // Configure multer for handling multiple file fields
 const upload = multer({
   storage: multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (req, file, cb: (error: Error | null, destination: string) => void) => {
       if (file.fieldname === 'image') {
         cb(null, path.join(__dirname, '../../uploads/images'));
       } else if (file.fieldname === 'sound') {
         cb(null, path.join(__dirname, '../../uploads/sounds'));
       } else {
-        cb(new Error('Invalid field name'));
+        cb(new Error('Invalid field name'), '');
       }
     },
-    filename: (req, file, cb) => {
+    filename: (req, file, cb: (error: Error | null, filename: string) => void) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       if (file.fieldname === 'image') {
         cb(null, `item-${uniqueSuffix}${path.extname(file.originalname)}`);
       } else if (file.fieldname === 'sound') {
         cb(null, `sound-${uniqueSuffix}${path.extname(file.originalname)}`);
       } else {
-        cb(new Error('Invalid field name'));
+        cb(new Error('Invalid field name'), '');
       }
     }
   }),
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req, file, cb: multer.FileFilterCallback) => {
     if (file.fieldname === 'image') {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
       if (allowedTypes.includes(file.mimetype)) {

@@ -50,6 +50,9 @@ COPY --from=frontend-builder --chown=nextjs:nodejs /app/frontend/dist ./frontend
 COPY --from=backend-builder --chown=nextjs:nodejs /app/backend/dist ./backend/dist
 COPY --from=backend-builder --chown=nextjs:nodejs /app/backend/package*.json ./backend/
 
+# Install backend production dependencies
+RUN cd backend && npm ci --only=production
+
 # Create necessary directories
 RUN mkdir -p database uploads/images uploads/sounds
 RUN chown -R nextjs:nodejs database uploads
@@ -65,4 +68,4 @@ ENV NODE_ENV=production
 ENV PORT=3001
 
 # Start the application
-CMD ["node", "backend/dist/index.js"] 
+CMD ["node", "backend/dist/src/index.js"] 
